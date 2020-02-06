@@ -1,5 +1,7 @@
 package it.dipvvf.abr.app.auth.servlet;
 
+import java.util.concurrent.Executors;
+
 import javax.servlet.ServletConfig;
 import javax.xml.ws.Endpoint;
 
@@ -17,6 +19,9 @@ public class SimpleCXFNonSpringServlet extends CXFNonSpringServlet {
 		super.loadBus(servletConfig);
 		Bus bus = getBus();
 		BusFactory.setDefaultBus(bus);
-		Endpoint.publish("/auth", new AuthSOAPService());
+		
+		Endpoint ep = Endpoint.create(new AuthSOAPService());
+		ep.setExecutor(Executors.newCachedThreadPool());
+		ep.publish("/auth");
 	}
 }
